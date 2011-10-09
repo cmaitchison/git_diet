@@ -45,7 +45,7 @@ done
 
 [ -e .git/objects/pack/pack-*.idx ] || (echo "The repo is empty" && exit)
  
-objects=`git verify-pack -v .git/objects/pack/pack-*.idx | grep -v objects | sort -k4nr | head -n $NO_OF_FILES`
+objects=`git verify-pack -v .git/objects/pack/pack-*.idx | grep -v objects | grep -v commit | sort -k4nr | head -n $NO_OF_FILES`
 
 output="raw_size(KB),compressed_size(KB),SHA,path,exists"
 for y in $objects
