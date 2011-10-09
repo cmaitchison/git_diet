@@ -17,4 +17,5 @@ fail_test() {
   [ `../../bin/find_fattest_objects.sh -d | grep ff456dc4 | grep 'file_1.txt' | wc -l` == "1" ] || fail_test "Didn't find expected object in find_fattest_objects.sh -d"
   [ `../../bin/find_fattest_objects.sh -df | grep ff456dc4 | grep 'file_1.txt' | wc -l` == "0" ] || fail_test "Found SHA in find_fattest_objects.sh -df"
   [ `../../bin/find_fattest_objects.sh -df | grep 'file_1.txt' | wc -l` == "1" ] || fail_test "Didn't find expected object in find_fattest_objects.sh -df"
+  echo OK!
 )
