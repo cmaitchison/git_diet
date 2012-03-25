@@ -43,7 +43,8 @@ do
      esac
 done
 
-[ -e .git/objects/pack/pack-*.idx ] || (echo "The repo is empty" && exit)
+n_packs=$(ls .git/objects/pack/pack-*.idx 2> /dev/null | wc -l)
+[ "$n_packs" != "0"  ] || (echo "The repo is empty" && exit)
  
 objects=`git verify-pack -v .git/objects/pack/pack-*.idx | grep -v objects | grep -v commit | sort -k4nr | head -n $NO_OF_FILES`
 
