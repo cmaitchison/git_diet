@@ -5,9 +5,11 @@ set -e
 paths=$@
 echo About to purge the following files: $paths
 
-git filter-branch --index-filter "git rm -rf --cached --ignore-unmatch $paths" HEAD
+git filter-branch --tag-name-filter cat --index-filter "git rm -rf --cached --ignore-unmatch $paths" -- --all
 
-rm -rf .git/refs/original/
-git reflog expire --all
-git gc --prune=now 
-git gc --aggressive
+git reset --hard 
+
+git for-each-ref --format="%(refname)" refs/original/ | xargs -n 1 git update-ref -d
+
+git reflog expire --expire=now --all
+git gc --prune=now --aggressive
