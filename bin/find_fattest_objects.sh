@@ -44,8 +44,8 @@ do
 done
 
 n_packs=$(ls .git/objects/pack/pack-*.idx 2> /dev/null | wc -l)
-[ "$n_packs" != "0"  ] || (echo "The repo is empty" && exit)
- 
+if [ $n_packs -eq 0 ]; then echo "The repo is empty" && exit 1; fi
+
 objects=`git verify-pack -v .git/objects/pack/pack-*.idx | grep -v objects | grep -v commit | sort -k4nr | head -n $NO_OF_FILES`
 
 output="raw_size(KB),compressed_size(KB),SHA,path,exists"
