@@ -54,7 +54,8 @@ do
 	size=$((`echo $y | cut -f 5 -d ' '`/1024))
 	compressedSize=$((`echo $y | cut -f 6 -d ' '`/1024))
 	sha=`echo $y | cut -f 1 -d ' '`
-	path=`git rev-list --all --objects | grep $sha | awk '{ print $2}'`
+	path=`git rev-list --all --objects | grep $sha | awk '{ s = ""; for (i = 2; i <= NF; i++) s = s $i " "; print s }'`
+
   file_exists=
 	[ -e `echo $path` ] && file_exists=true
 	output="${output}\n${size},${compressedSize},${sha},${path},${file_exists}"
