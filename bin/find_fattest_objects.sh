@@ -48,20 +48,21 @@ if [ $n_packs -eq 0 ]; then echo "The repo is empty" && exit 1; fi
 
 objects=`git verify-pack -v .git/objects/pack/pack-*.idx | grep -v objects | grep -v commit | sort -k4nr | head -n $NO_OF_FILES`
 
-output="raw_size(KB),compressed_size(KB),SHA,path,exists"
 for y in $objects
 do
 	size=$((`echo $y | cut -f 5 -d ' '`/1024))
 	compressedSize=$((`echo $y | cut -f 6 -d ' '`/1024))
 	sha=`echo $y | cut -f 1 -d ' '`
-	path=`git rev-list --all --objects | grep $sha | awk '{ s = ""; for (i = 2; i <= NF; i++) s = s $i " "; print s }'`
-
-  file_exists=
-	[ -e `echo $path` ] && file_exists=true
-	output="${output}\n${size},${compressedSize},${sha},${path},${file_exists}"
+	path=$( git rev-list --all --objects | grep $sha | awk '{ s = ""; for (i = 2; i <= NF; i++) s = s $i " "; print s }' | sed 's/[ \t]*$//' )
+	path=$( echo $path | sed 's/ /\\ /g' ) # escape spaces
+	[ -e `echo $path` ] && file_exists=true || file_exists=false
+	[ ! -z $output ] && output="${output}\n"
+	output="${output}${size},${compressedSize},${sha},${path},${file_exists}"
 done
-
-$DELETED_ONLY && $PATHS_ONLY && echo -e $output | column -t -s ',' | grep -wv true | grep -vw path | awk '{print $4}' && exit
-$PATHS_ONLY && echo -e $output | column -t -s ',' | grep -vw path | awk '{print $4}' && exit
-$DELETED_ONLY && echo -e $output | column -t -s ',' | grep -wv true  && exit
+if [ $PATHS_ONLY == false ]; then
+	output="raw_size(KB),compressed_size(KB),SHA,path,exists\n${output}"
+fi
+$DELETED_ONLY && $PATHS_ONLY && echo -e $output | awk -F"," '$5 == "false" {print $4}' && exit
+$PATHS_ONLY && echo -e $output | awk -F"," '{print $4}' && exit
+$DELETED_ONLY && echo -e $output | column -t -s ',' | grep -wv true && exit
 echo -e $output | column -t -s ','
