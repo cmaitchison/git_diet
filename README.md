@@ -1,7 +1,7 @@
 git_diet
 ========
 
-Sometimes you just don't want git to keep absolutely everything that has ever been committed to a repo.  Maybe you need to trim down your repo size to put it on github or push it to heroku, or maybe you are just a little OCD.  Either way, here's hoping some of the scripts in here can help you.
+Sometimes you just don't want git to keep absolutely everything that has ever been committed to a repo.  Maybe you need to trim down your repo size to put it on github or push it to heroku, or maybe you are just a little fastidious.  Either way, here's hoping some of the scripts in here can help you.
 
 These scripts have only been tested on Mac OS X.  All help very very welcome :D
 
